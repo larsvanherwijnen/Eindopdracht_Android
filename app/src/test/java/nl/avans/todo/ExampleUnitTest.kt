@@ -1,4 +1,4 @@
-package digital.cbyte.myapplication
+package nl.avans.todo
 
 import org.junit.Test
 

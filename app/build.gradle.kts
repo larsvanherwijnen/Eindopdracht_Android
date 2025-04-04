@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "digital.cbyte.myapplication"
+    namespace = "nl.avans.todo"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "digital.cbyte.myapplication"
+        applicationId = "nl.avans.todo"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
