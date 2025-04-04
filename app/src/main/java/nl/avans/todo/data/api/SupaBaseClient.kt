@@ -11,68 +11,56 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 
 object SupabaseClient {
-    private lateinit var requestQueue: RequestQueue
+    private var requestQueue: RequestQueue? = null
 
     fun initialize(context: Context) {
-        requestQueue = Volley.newRequestQueue(context.applicationContext)
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context.applicationContext)
+        }
     }
 
-    suspend fun makeRequest(urlString: String, method: String, token: String? = null, body: String? = null): String? {
-        return withContext(Dispatchers.IO) {
-            suspendCancellableCoroutine { continuation ->
-                val requestMethod = when (method) {
-                    "GET" -> Request.Method.GET
-                    "POST" -> Request.Method.POST
-                    "PATCH" -> Request.Method.PATCH
-                    "DELETE" -> Request.Method.DELETE
-                    else -> Request.Method.GET
-                }
-
-                val headers = HashMap<String, String>().apply {
-                    put("apikey", SupabaseConfig.API_KEY)
-                    put("Content-Type", "application/json")
-                    token?.let { put("Authorization", "Bearer $it") }
-                }
-
-                val jsonBody = body?.let { JSONObject(it) }
-
-                val request = if (jsonBody != null) {
-                    JsonObjectRequest(requestMethod, urlString, jsonBody,
-                        { response ->
-                            continuation.resume(response.toString())
-                        },
-                        { error ->
-                            continuation.resume(null)
-                        }
-                    ).apply {
-                        headers.forEach { (key, value) ->
-                            this.headers[key] = value
-                        }
-                    }
-                } else {
-                    object : StringRequest(requestMethod, urlString,
-                        { response ->
-                            continuation.resume(response)
-                        },
-                        { error ->
-                            continuation.resume(null)
-                        }
-                    ) {
-                        override fun getHeaders(): MutableMap<String, String> {
-                            return headers
-                        }
-                    }
-                }
-
-                requestQueue.add(request)
-
-                continuation.invokeOnCancellation {
-                    request.cancel()
-                }
+    suspend fun makeRequest(
+        url: String,
+        method: String,
+        token: String? = null,
+        body: String? = null
+    ): String? = suspendCancellableCoroutine { continuation ->
+        val request = object : StringRequest(
+            getVolleyMethod(method),
+            url,
+            { response ->
+                continuation.resume(response)
+            },
+            { error ->
+                continuation.resume(null)
             }
+        ) {
+            override fun getHeaders(): MutableMap<String, String> {
+                return mutableMapOf(
+                    "apikey" to SupabaseConfig.API_KEY,
+                    "Authorization" to "Bearer $token",
+                    "Content-Type" to "application/json"
+                )
+            }
+
+            override fun getBody(): ByteArray {
+                return body?.toByteArray() ?: ByteArray(0)
+            }
+        }
+
+        requestQueue?.add(request)
+    }
+
+    private fun getVolleyMethod(method: String): Int {
+        return when (method.uppercase()) {
+            "GET" -> Request.Method.GET
+            "POST" -> Request.Method.POST
+            "PUT" -> Request.Method.PUT
+            "DELETE" -> Request.Method.DELETE
+            "PATCH" -> Request.Method.PATCH
+            else -> Request.Method.GET
         }
     }
 }

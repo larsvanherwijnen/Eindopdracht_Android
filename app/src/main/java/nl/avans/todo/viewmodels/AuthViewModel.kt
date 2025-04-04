@@ -1,6 +1,7 @@
 package nl.avans.todo.viewmodels
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import nl.avans.todo.data.api.AuthService
@@ -28,7 +29,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     fun register(email: String, password: String) {
         viewModelScope.launch {
             val success = AuthService.register(email, password)
-//            _authState.value = success
+            _authState.value = success?.length!! > 0
         }
     }
 
