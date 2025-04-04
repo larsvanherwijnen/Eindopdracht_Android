@@ -1,5 +1,6 @@
 package nl.avans.todo.ui.screens
 
+
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
@@ -17,33 +18,19 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import nl.avans.todo.viewmodels.AuthViewModel
 
-
 @Composable
-fun LoginScreen(navController: NavController, authViewModel: AuthViewModel = viewModel()) {
+fun RegisterScreen(navController: NavController, authViewModel: AuthViewModel = viewModel()) {
     val context = LocalContext.current
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    val loginState by authViewModel.authState.collectAsState()
-
-    LaunchedEffect(loginState) {
-        loginState?.let { token ->
-            if (token) {
-                Toast.makeText(context, "Login Successful!", Toast.LENGTH_SHORT).show()
-                navController.navigate("todo_list") {
-                    popUpTo("login") { inclusive = true } // Clear backstack
-                }
-            } else {
-                Toast.makeText(context, "Login Failed", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
+    var confirmPassword by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Login", style = MaterialTheme.typography.headlineLarge)
+        Text("Register", style = MaterialTheme.typography.headlineLarge)
 
         Spacer(modifier = Modifier.height(20.dp))
 
@@ -64,16 +51,37 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel = vie
             modifier = Modifier.fillMaxWidth()
         )
 
+        Spacer(modifier = Modifier.height(10.dp))
+
+        OutlinedTextField(
+            value = confirmPassword,
+            onValueChange = { confirmPassword = it },
+            label = { Text("Confirm Password") },
+            visualTransformation = PasswordVisualTransformation(),
+            modifier = Modifier.fillMaxWidth()
+        )
+
         Spacer(modifier = Modifier.height(20.dp))
 
-        Button(onClick = { authViewModel.login(email, password) }, modifier = Modifier.fillMaxWidth()) {
-            Text("Login")
+        Button(
+            onClick = {
+                if (password == confirmPassword) {
+                    authViewModel.register(email, password)
+                    Toast.makeText(context, "Account Created!", Toast.LENGTH_SHORT).show()
+                    navController.popBackStack()
+                } else {
+                    Toast.makeText(context, "Passwords do not match", Toast.LENGTH_SHORT).show()
+                }
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Register")
         }
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        TextButton(onClick = { navController.navigate("register") }) {
-            Text("Don't have an account? Register here")
+        TextButton(onClick = { navController.navigate("login") }) {
+            Text("Already have an account? Login here")
         }
     }
 }

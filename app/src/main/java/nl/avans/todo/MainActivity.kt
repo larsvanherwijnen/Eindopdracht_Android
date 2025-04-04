@@ -11,6 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import nl.avans.todo.ui.screens.LoginScreen
+import nl.avans.todo.ui.screens.RegisterScreen
 import nl.avans.todo.ui.theme.TodoTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,7 +21,7 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             NavHost(navController, startDestination = "login") {
                 composable("login") { LoginScreen(navController) }
-//                composable("register") { RegisterScreen(navController) }
+                composable("register") { RegisterScreen(navController) }
 //                composable("todo_list") { TodoListScreen() }
             }
         }

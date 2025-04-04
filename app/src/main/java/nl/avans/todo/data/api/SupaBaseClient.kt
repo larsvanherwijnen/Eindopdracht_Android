@@ -6,7 +6,7 @@ import java.net.URL
 
 object SupabaseClient {
 
-    fun makeRequest(urlString: String, method: String, token: String? = null, body: String? = null): String? {
+    suspend fun makeRequest(urlString: String, method: String, token: String? = null, body: String? = null): String? {
         val url = URL(urlString)
         val connection = url.openConnection() as HttpURLConnection
         connection.requestMethod = method
