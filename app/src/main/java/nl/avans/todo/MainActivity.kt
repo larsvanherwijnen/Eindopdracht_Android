@@ -10,6 +10,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import nl.avans.todo.data.api.SupabaseClient
 import nl.avans.todo.ui.screens.LoginScreen
 import nl.avans.todo.ui.screens.RegisterScreen
 import nl.avans.todo.ui.theme.TodoTheme
@@ -17,6 +18,9 @@ import nl.avans.todo.ui.theme.TodoTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        SupabaseClient.initialize(this)
+
         setContent {
             val navController = rememberNavController()
             NavHost(navController, startDestination = "login") {
@@ -31,7 +35,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
-        text = "Hello $name!",
+        text = "Hello $name jhhhhjhjhhjjhhfkjhda jshfkjdas fhjkdsahkjfhjsdhjafhdjshfkdasjfhasdfhljdskafhsakdflhdsajkfhjksahfkdjshajkfhadsjkf!",
         modifier = modifier
     )
 }
