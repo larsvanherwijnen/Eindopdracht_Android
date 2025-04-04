@@ -1,4 +1,4 @@
-package nl.avans.todo.viewmodel
+package nl.avans.todo.viewmodels
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
