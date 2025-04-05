@@ -53,6 +53,14 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.navigation.compose)
+    implementation("androidx.compose.material:material-icons-extended:1.6.1")
+    implementation("com.android.volley:volley:1.2.1")
+    
+    // Google Accompanist libraries for pull-to-refresh and swipe actions
+    implementation("com.google.accompanist:accompanist-swiperefresh:0.32.0")
+    // For gesture handling like swipes
+    implementation("androidx.compose.foundation:foundation:1.6.1")
+    
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -60,6 +68,5 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation("com.android.volley:volley:1.2.1")
 
 }
