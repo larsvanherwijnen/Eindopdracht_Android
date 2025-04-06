@@ -136,14 +136,14 @@ fun TodoList(
             
             if (isLoading && todos.isEmpty()) {
                 Box(modifier = Modifier.fillMaxSize()) {
-                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
             } else if (todos.isEmpty()) {
                 Box(modifier = Modifier.fillMaxSize()) {
-                    Text(
-                        text = "No tasks found. Add a new task!",
-                        modifier = Modifier.align(Alignment.Center)
-                    )
+                Text(
+                    text = "No tasks found. Add a new task!",
+                    modifier = Modifier.align(Alignment.Center)
+                )
                 }
             } else {
                 LazyColumn(
