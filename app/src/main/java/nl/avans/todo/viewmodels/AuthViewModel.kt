@@ -58,7 +58,6 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
             try {
                 val result = AuthService.register(email, password)
                 if (result != null) {
-                    // After registration, automatically log in
                     login(email, password)
                 } else {
                     _error.value = "Registration failed"

@@ -11,7 +11,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import nl.avans.todo.data.model.Todo
 import nl.avans.todo.viewmodels.TodoViewModel
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter

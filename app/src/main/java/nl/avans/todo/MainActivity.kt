@@ -34,6 +34,7 @@ import nl.avans.todo.viewmodels.TodoViewModel
 class MainActivity : ComponentActivity() {
     private val todoViewModel: TodoViewModel by viewModels()
     private val authViewModel: AuthViewModel by viewModels()
+    val startDestination = "login"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +50,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val navController = rememberNavController()
                     val authState by authViewModel.authState.collectAsState()
-                    
+
                     // Check for existing session
                     LaunchedEffect(Unit) {
                         val token = SessionManager.getToken(this@MainActivity)
@@ -111,40 +112,6 @@ class MainActivity : ComponentActivity() {
                 intent.data?.toString()?.let { url ->
                     todoViewModel.handleSharedContent(url)
                 }
-            }
-        }
-    }
-}
-
-@Composable
-fun TodoApp(application: android.app.Application) {
-    val navController = rememberNavController()
-    val startDestination = "login"
-
-    LaunchedEffect(Unit) {
-        val token = SessionManager.getToken(application)
-        if (token != null) {
-            navController.navigate("todo_list") {
-                popUpTo("login") { inclusive = true }
-            }
-        }
-    }
-
-    NavHost(navController, startDestination = startDestination) {
-        composable("login") { LoginScreen(navController) }
-        composable("register") { RegisterScreen(navController) }
-        composable("todo_list") { TodoList(navController) }
-        composable("profile") { UserProfileScreen(navController) }
-        composable("todo_detail/{todoId}") { backStackEntry ->
-            val todoId = backStackEntry.arguments?.getString("todoId")?.toIntOrNull()
-            if (todoId != null) {
-                TodoDetailScreen(navController, todoId)
-            }
-        }
-        composable("todo_edit/{todoId}") { backStackEntry ->
-            val todoId = backStackEntry.arguments?.getString("todoId")?.toIntOrNull()
-            if (todoId != null) {
-                TodoEditScreen(navController, todoId)
             }
         }
     }

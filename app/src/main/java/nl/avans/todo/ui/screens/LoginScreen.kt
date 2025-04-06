@@ -33,7 +33,7 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel = vie
             if (success) {
                 Toast.makeText(context, "Login Successful!", Toast.LENGTH_SHORT).show()
                 navController.navigate("todo_list") {
-                    popUpTo("login") { inclusive = true } // Clear backstack
+                    popUpTo("login") { inclusive = true }
                 }
             }
         }

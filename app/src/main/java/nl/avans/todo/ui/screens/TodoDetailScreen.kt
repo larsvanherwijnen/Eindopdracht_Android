@@ -19,7 +19,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import nl.avans.todo.data.model.Todo
 import nl.avans.todo.viewmodels.TodoViewModel
 import nl.avans.todo.utils.PermissionHandler
 import java.time.format.DateTimeFormatter
@@ -40,7 +39,6 @@ fun TodoDetailScreen(
     val showNotificationPermissionRequest by todoViewModel.showNotificationPermissionRequest.collectAsState()
     val showExactAlarmPermissionRequest by todoViewModel.showExactAlarmPermissionRequest.collectAsState()
     
-    // Get the current back stack entry to detect when we return from edit screen
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route
 

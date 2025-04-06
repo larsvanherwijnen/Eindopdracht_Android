@@ -2,6 +2,8 @@ package nl.avans.todo.ui.screens
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
@@ -26,6 +28,7 @@ fun UserProfileScreen(
     var newPassword by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     val updateState by authViewModel.updateState.collectAsState()
+    val scrollState = rememberScrollState()
 
     LaunchedEffect(updateState) {
         updateState?.let { success ->
@@ -59,7 +62,8 @@ fun UserProfileScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(16.dp),
+                .padding(16.dp)
+                .verticalScroll(scrollState),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
@@ -112,6 +116,7 @@ fun UserProfileScreen(
             ) {
                 Text("Update Profile")
             }
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
-} 
+}
