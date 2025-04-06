@@ -36,7 +36,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                 val result = AuthService.login(email, password)
                 if (result != null) {
                     val (token, user) = result
-                    SessionManager.saveToken(getApplication(), token)
+                    SessionManager.saveUserInfo(getApplication(), token, user.id)
                     _user.value = user
                     _authState.value = true
                 } else {
@@ -44,6 +44,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                 }
             } catch (e: Exception) {
                 _error.value = e.message ?: "Unknown error occurred"
+                _authState.value = false
             } finally {
                 _isLoading.value = false
             }

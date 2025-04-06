@@ -55,11 +55,16 @@ object AuthService {
                 return Pair(accessToken, user)
             } else {
                 Log.e(TAG, "Login failed: null response")
-                return null
+                throw Exception("Invalid credentials")
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error during login: ${e.message}", e)
-            throw e
+            when {
+                e.message?.contains("400") == true -> throw Exception("Invalid email or password")
+                e.message?.contains("401") == true -> throw Exception("Invalid credentials")
+                e.message?.contains("403") == true -> throw Exception("Access denied")
+                else -> throw Exception("Login failed: ${e.message ?: "Unknown error"}")
+            }
         }
     }
 

@@ -3,6 +3,7 @@ package nl.avans.todo.ui.screens
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -24,16 +25,24 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel = vie
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val loginState by authViewModel.authState.collectAsState()
+    val error by authViewModel.error.collectAsState()
+    val isLoading by authViewModel.isLoading.collectAsState()
 
     LaunchedEffect(loginState) {
-        loginState?.let { token ->
-            if (token) {
+        loginState?.let { success ->
+            if (success) {
                 Toast.makeText(context, "Login Successful!", Toast.LENGTH_SHORT).show()
                 navController.navigate("todo_list") {
                     popUpTo("login") { inclusive = true } // Clear backstack
                 }
-            } else {
-                Toast.makeText(context, "Login Failed", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    LaunchedEffect(error) {
+        error?.let { errorMessage ->
+            if (errorMessage.isNotEmpty()) {
+                Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -43,37 +52,49 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel = vie
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Login", style = MaterialTheme.typography.headlineLarge)
-
-        Spacer(modifier = Modifier.height(20.dp))
+        Text(
+            text = "Login",
+            style = MaterialTheme.typography.headlineMedium,
+            modifier = Modifier.padding(bottom = 32.dp)
+        )
 
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
             label = { Text("Email") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+            enabled = !isLoading
         )
-
-        Spacer(modifier = Modifier.height(10.dp))
 
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
             label = { Text("Password") },
             visualTransformation = PasswordVisualTransformation(),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+            enabled = !isLoading
         )
 
-        Spacer(modifier = Modifier.height(20.dp))
-
-        Button(onClick = { authViewModel.login(email, password) }, modifier = Modifier.fillMaxWidth()) {
-            Text("Login")
+        Button(
+            onClick = { authViewModel.login(email, password) },
+            modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+            enabled = !isLoading && email.isNotEmpty() && password.isNotEmpty()
+        ) {
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(24.dp),
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            } else {
+                Text("Login")
+            }
         }
 
-        Spacer(modifier = Modifier.height(10.dp))
-
-        TextButton(onClick = { navController.navigate("register") }) {
-            Text("Don't have an account? Register here")
+        TextButton(
+            onClick = { navController.navigate("register") },
+            enabled = !isLoading
+        ) {
+            Text("Don't have an account? Register")
         }
     }
 }
